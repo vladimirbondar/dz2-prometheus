@@ -1,7 +1,7 @@
 ---
 
 - name: Update package manager cache 
-  hosts: all
+  hosts: balancers:postgres_cluster
   become: yes
   tasks:
     - name: update apt cache
@@ -52,6 +52,7 @@
       ansible.builtin.blockinfile:
         path: /etc/prometheus/prometheus.yml.test
         create: true
+        marker: "# {mark} etcs group" 
         block: |
           global:
             scrape_interval: 15s
@@ -62,10 +63,10 @@
     - name: add hosts to etcd group to prometheus config file
       ansible.builtin.lineinfile:
         path: /etc/prometheus/prometheus.yml.test
-        insertafter: '    - targets: # etcd host are listed after this line'
+        insertafter: '# END etcs group'
         line: "      {{ item }}"
       with_items:
-        - "{{ groups['etcd'] }}"
+        - "{{ groups['etcd_cluster'] }}"
 
 
 
