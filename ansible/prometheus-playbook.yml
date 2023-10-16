@@ -1,7 +1,7 @@
 ---
 
 - name: Update package manager cache 
-  hosts: balancers:postgres_cluster
+  hosts: all #!balancers!postgres_cluster!etcd_cluster
   become: yes
   tasks:
     - name: update apt cache
@@ -39,7 +39,7 @@
       ansible.builtin.package:
         name: prometheus
         state: present
-    - name: Install prometheus
+    - name: Install prometheus-alertmanager
       ansible.builtin.package:
         name: prometheus-alertmanager
         state: present
@@ -70,15 +70,6 @@
       ansible.builtin.service:
         name: prometheus
         state: reloaded
-    - name: test vars change
-      set_fact:
-        etcd_list: "{{ etcd_list }}, {{ item }}"
-      with_items:
-        - "{{ groups['etcd_cluster'] }}"
-
-    - ansible.builtin.debug:
-        var: etcd_list
-
 
 # prometheus-postgres-exporter
 
