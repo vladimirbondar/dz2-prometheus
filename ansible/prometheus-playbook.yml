@@ -47,8 +47,6 @@
 - name: add etcd nodes to monitoring group
   hosts: balancers
   become: true
-  vars:
-    etcd_list: ""
   tasks:
     - name: add etcd group to prometheus config file
       ansible.builtin.blockinfile:
@@ -70,12 +68,38 @@
       ansible.builtin.service:
         name: prometheus
         state: reloaded
-    - name: test
+
+- name: install node-exportes on remote hosts
+  hosts: postgres_cluster:etcd_cluster
+  become: true
+  tasks:
+    - name: install node node-exporter
+      ansible.builtin.package:
+        name: prometheus-node-exporter
+        state: present
+
+
+- name: add remote nodes to monitoring group
+  hosts: balancers
+  become: true
+  tasks:
+    - name: mark node config
       ansible.builtin.lineinfile:
         path: /etc/prometheus/prometheus.yml
         insertafter: 'job_name: node'
         regexp: "static_configs:"
         line: "    static_configs: # node"
+    - name: add hosts to etcd group to prometheus config file
+      ansible.builtin.lineinfile:
+        path: /etc/prometheus/prometheus.yml
+        insertafter: 'static_configs: # node'
+        line: "        - {{ item }}:9100"
+      with_items:
+        - "{{ groups['etcd_cluster', 'postgres_cluster'] }}"
+    - name: reload prometheus config
+      ansible.builtin.service:
+        name: prometheus
+        state: reloaded
 
 
 # prometheus-node-exporter
