@@ -50,11 +50,11 @@
   vars:
     etcd_list: ""
   tasks:
-    - name: add etcs group to prometheus config file
+    - name: add etcd group to prometheus config file
       ansible.builtin.blockinfile:
         path: /etc/prometheus/prometheus.yml
-        insertafter: 'scrape_configs:'
-        marker: "# {mark} etcs group" 
+        insertafter: '  - job_name: node'
+        marker: "# {mark} node group" 
         block: |2
             - job_name: etcd-job
               static_configs:
@@ -70,6 +70,14 @@
       ansible.builtin.service:
         name: prometheus
         state: reloaded
+    - name: test
+      ansible.builtin.lineinfile:
+        path: /etc/prometheus/prometheus.yml
+        insertafter: 'job_name: node'
+        regexp: "static_configs:"
+        line: "static_configs: # node"
 
+
+# prometheus-node-exporter
 # prometheus-postgres-exporter
 
