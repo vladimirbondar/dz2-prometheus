@@ -1,7 +1,7 @@
 ---
 
 - name: Update package manager cache 
-  hosts: all #!balancers!postgres_cluster!etcd_cluster
+  hosts: all!balancers!postgres_cluster!etcd_cluster
   become: yes
   tasks:
     - name: update apt cache
