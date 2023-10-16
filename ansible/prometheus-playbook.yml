@@ -53,7 +53,7 @@
     - name: add etcd group to prometheus config file
       ansible.builtin.blockinfile:
         path: /etc/prometheus/prometheus.yml
-        insertafter: '  - job_name: node'
+        insertafter: 'scrape_configs:'
         marker: "# {mark} node group" 
         block: |2
             - job_name: etcd-job
@@ -75,7 +75,7 @@
         path: /etc/prometheus/prometheus.yml
         insertafter: 'job_name: node'
         regexp: "static_configs:"
-        line: "static_configs: # node"
+        line: "    static_configs: # node"
 
 
 # prometheus-node-exporter
