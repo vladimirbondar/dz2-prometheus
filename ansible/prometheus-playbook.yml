@@ -47,19 +47,18 @@
 - name: add etcd nodes to monitoring group
   hosts: balancers
   become: true
+  vars:
+    etcd_list: ""
   tasks:
     - name: add etcs group to prometheus config file
       ansible.builtin.blockinfile:
         path: /etc/prometheus/prometheus.yml
-        create: true
+        insertafter: 'scrape_configs:'
         marker: "# {mark} etcs group" 
         block: |
-          global:
-            scrape_interval: 15s
-          scrape_configs:
             - job_name: etcd-job
               static_configs:
-                - targets:  # etcd host are listed after this line
+                - targets:
     - name: add hosts to etcd group to prometheus config file
       ansible.builtin.lineinfile:
         path: /etc/prometheus/prometheus.yml
@@ -71,6 +70,14 @@
       ansible.builtin.service:
         name: prometheus
         state: reloaded
+    - name: test vars change
+      set_fact:
+        etcd_list: "{{ etcd_list }}, {{ item }}"
+      with_items:
+        - "{{ groups['etcd_cluster'] }}"
+
+    - ansible.builtin.debug:
+        var: etcd_list
 
 
 # prometheus-postgres-exporter
