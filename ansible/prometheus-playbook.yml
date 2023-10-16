@@ -51,6 +51,7 @@
     - name: add etcs group to prometheus config file
       ansible.builtin.blockinfile:
         path: /etc/prometheus/prometheus.yml.test
+        create: true
         block: |
           global:
             scrape_interval: 15s
