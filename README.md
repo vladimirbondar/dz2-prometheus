@@ -6,4 +6,9 @@ Prometheus node:
 Links:
 
     http://balancer:9090/classic/graph
-    http://balancer:9100/metrics
+
+Installation:
+
+    git clone https://github.com/vladimirbondar/dz2-prometheus.git
+    cd dz2-prometheus/ansible
+    ansible-playbook -i inventory prometheus-playbook.yml
