@@ -56,9 +56,9 @@
         insertafter: 'scrape_configs:'
         marker: "# {mark} etcs group" 
         block: |
-            - job_name: etcd-job
-              static_configs:
-                - targets:
+              - job_name: etcd-job
+                static_configs:
+                  - targets:
     - name: add hosts to etcd group to prometheus config file
       ansible.builtin.lineinfile:
         path: /etc/prometheus/prometheus.yml
