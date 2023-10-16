@@ -77,6 +77,12 @@
       ansible.builtin.package:
         name: prometheus-node-exporter
         state: present
+      when: ansible_os_family == "Debian"
+    - name: install node node-exporter
+      ansible.builtin.package:
+        name: golang-github-prometheus-node-exporter
+        state: present
+      when: ansible_os_family == "RedHat"
 
 
 - name: add remote nodes to monitoring group
