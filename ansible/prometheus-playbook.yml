@@ -63,7 +63,7 @@
       ansible.builtin.lineinfile:
         path: /etc/prometheus/prometheus.yml
         insertafter: '# END etcs group'
-        line: "        - {{ item }}"
+        line: "        - {{ item }}:2379"
       with_items:
         - "{{ groups['etcd_cluster'] }}"
     - name: reload prometheus config
