@@ -50,7 +50,7 @@
   tasks:
     - name: add etcs group to prometheus config file
       ansible.builtin.blockinfile:
-        path: /etc/prometheus/prometheus.yml.test
+        path: /etc/prometheus/prometheus.yml
         create: true
         marker: "# {mark} etcs group" 
         block: |
@@ -62,7 +62,7 @@
                 - targets:  # etcd host are listed after this line
     - name: add hosts to etcd group to prometheus config file
       ansible.builtin.lineinfile:
-        path: /etc/prometheus/prometheus.yml.test
+        path: /etc/prometheus/prometheus.yml
         insertafter: '# END etcs group'
         line: "        - {{ item }}"
       with_items:
