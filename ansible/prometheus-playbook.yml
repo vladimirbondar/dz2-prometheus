@@ -1,0 +1,48 @@
+---
+
+- name: Update package manager cache 
+  hosts: all
+  become: yes
+  tasks:
+    - name: update apt cache
+      ansible.builtin.apt:
+        update_cache: yes
+      when: ansible_pkg_mgr == "apt"
+    - name: update yum cache
+      ansible.builtin.yum:
+        update_cache: yes
+      when: ansible_pkg_mgr == "yum"
+    - name: update apk cache
+      community.general.apk:
+        update_cache: yes
+      when: ansible_pkg_mgr == "apk"
+    - name: update dnf cache
+      ansible.builtin.dnf:
+        update_cache: yes
+      when: ansible_pkg_mgr == "dnf"
+    - name: update zypper cache
+      community.general.zypper:
+        name: zypper
+        update_cache: yes
+      when: ansible_pkg_mgr == "zypper"
+    - name: update pacman cache
+      community.general.pacman:
+        update_cache: yes
+      when: ansible_pkg_mgr == "pacman"
+
+
+- name: prometheus & alertmanager instances installation
+  hosts: balancers
+  become: true
+  tasks:
+    - name: Install prometheus
+      ansible.builtin.package:
+        name: prometheus
+        state: present
+    - name: Install prometheus
+      ansible.builtin.package:
+        name: prometheus-alertmanager
+        state: present
+
+# prometheus-postgres-exporter
+
