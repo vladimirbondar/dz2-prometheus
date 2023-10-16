@@ -44,5 +44,32 @@
         name: prometheus-alertmanager
         state: present
 
+- name: add etcd nodes to monitoring group
+  hosts: balancers
+  become: true
+  tasks:
+    - name: add etcs group to prometheus config file
+      ansible.builtin.blockinfile:
+        path: /etc/prometheus/prometheus.yml.test
+        block: |
+          global:
+            scrape_interval: 15s
+          scrape_configs:
+            - job_name: etcd-job
+              static_configs:
+                - targets:  # etcd host are listed after this line
+    - name: add hosts to etcd group to prometheus config file
+      ansible.builtin.lineinfile:
+        path: /etc/prometheus/prometheus.yml.test
+        insertafter: '    - targets: # etcd host are listed after this line'
+        line: "      {{ item }}"
+      with_items:
+        - "{{ groups['etcd'] }}"
+
+
+
+
+
+
 # prometheus-postgres-exporter
 
