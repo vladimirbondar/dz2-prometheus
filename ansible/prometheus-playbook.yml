@@ -101,7 +101,14 @@
         insertafter: 'static_configs: # node'
         line: "        - {{ item }}:9100"
       with_items:
-        - "{{ groups['etcd_cluster', 'postgres_cluster'] }}"
+        - "{{ groups['etcd_cluster'] }}"
+    - name: add hosts to etcd group to prometheus config file
+      ansible.builtin.lineinfile:
+        path: /etc/prometheus/prometheus.yml
+        insertafter: 'static_configs: # node'
+        line: "        - {{ item }}:9100"
+      with_items:
+        - "{{ groups['postgres_cluster'] }}"
     - name: reload prometheus config
       ansible.builtin.service:
         name: prometheus
