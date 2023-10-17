@@ -116,7 +116,7 @@
       ansible.builtin.lineinfile:
         path: /etc/prometheus/prometheus.yml
         insertafter: '# END postgres group'
-        line: "        - {{ item }}:2379"
+        line: "        - {{ item }}:9187"
       with_items:
         - "{{ groups['postgres_cluster'] }}"
     - name: reload prometheus config
