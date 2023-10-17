@@ -1,0 +1,13 @@
+[Unit]
+Description=Prometheus exporter for Postgresql (https://github.com/wrouesnel/postgres_exporter)
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+WorkingDirectory=/opt/postgres_exporter
+EnvironmentFile=/opt/postgres_exporter/env
+User=pg_exporter
+ExecStart=/opt/postgres_exporter/postgres_exporter_v0.4.1_linux-amd64/postgres_exporter --extend.query-path=/opt/postgres_exporter/metrics.yaml --web.listen-address=:9187
+
+[Install]
+WantedBy=multi-user.target
