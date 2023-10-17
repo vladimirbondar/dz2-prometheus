@@ -99,6 +99,27 @@
         state: reloaded
 
 
-# prometheus-node-exporter
-# prometheus-postgres-exporter
-
+- name: add postgres nodes to monitoring group
+  hosts: balancers
+  become: true
+  tasks:
+    - name: add postgres group to prometheus config file
+      ansible.builtin.blockinfile:
+        path: /etc/prometheus/prometheus.yml
+        insertafter: 'scrape_configs:'
+        marker: "# {mark} postgres group" 
+        block: |2
+            - job_name: postgres-job
+              static_configs:
+                - targets:
+    - name: add hosts to etcd group to prometheus config file
+      ansible.builtin.lineinfile:
+        path: /etc/prometheus/prometheus.yml
+        insertafter: '# END postgres group'
+        line: "        - {{ item }}:2379"
+      with_items:
+        - "{{ groups['postgres_cluster'] }}"
+    - name: reload prometheus config
+      ansible.builtin.service:
+        name: prometheus
+        state: reloaded
