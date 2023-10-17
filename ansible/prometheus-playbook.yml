@@ -69,22 +69,6 @@
         name: prometheus
         state: reloaded
 
-- name: install node-exportes on remote hosts
-  hosts: postgres_cluster:etcd_cluster
-  become: true
-  tasks:
-    - name: install node node-exporter
-      ansible.builtin.package:
-        name: prometheus-node-exporter
-        state: present
-      when: ansible_os_family == "Debian"
-    - name: install node node-exporter
-      ansible.builtin.package:
-        name: golang-github-prometheus-node-exporter
-        state: present
-      when: ansible_os_family == "RedHat"
-
-
 - name: add remote nodes to monitoring group
   hosts: balancers
   become: true

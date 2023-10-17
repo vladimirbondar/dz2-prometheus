@@ -5,9 +5,9 @@ After=network-online.target
 
 [Service]
 WorkingDirectory=/opt/postgres_exporter
-EnvironmentFile=/opt/postgres_exporter/env
-User=pg_exporter
-ExecStart=/opt/postgres_exporter/postgres_exporter_v0.4.1_linux-amd64/postgres_exporter --extend.query-path=/opt/postgres_exporter/metrics.yaml --web.listen-address=:9187
+EnvironmentFile=/opt/postgres_exporter/postgres_exporter.env
+User=postgres_exporter
+ExecStart=/usr/local/bin/postgres_exporter --extend.query-path=/opt/postgres_exporter/metrics.yaml --web.listen-address=:9187
 
 [Install]
 WantedBy=multi-user.target
