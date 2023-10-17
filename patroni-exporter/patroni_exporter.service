@@ -1,9 +1,9 @@
 [Unit]
-Description=Node Exporter
+Description=Patroni Exporter
 Wants=network-online.target
 After=network-online.target
 [Service]
-User=node_exporter
-ExecStart=/usr/bin/node_exporter
+User=patroni_exporter
+ExecStart=/usr/bin/patroni_exporter --patroni.host="http://10.0.10.3"
 [Install]
 WantedBy=default.target
