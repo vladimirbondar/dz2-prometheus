@@ -142,6 +142,32 @@
         path: /etc/prometheus/prometheus.yml
         insertafter: '# END patroni group'
         line: "        - {{ item }}:9933"
+        state: absent
+      with_items:
+        - "{{ groups['postgres_cluster'] }}"
+    - name: reload prometheus config
+      ansible.builtin.service:
+        name: prometheus
+        state: reloaded
+
+- name: add patroni nodes to monitoring group
+  hosts: balancers
+  become: true
+  tasks:
+    - name: add patroni group to prometheus config file
+      ansible.builtin.blockinfile:
+        path: /etc/prometheus/prometheus.yml
+        insertafter: 'scrape_configs:'
+        marker: "# {mark} patroni group" 
+        block: |2
+            - job_name: patroni-job
+              static_configs:
+                - targets:
+    - name: add hosts to patroni group to prometheus config file
+      ansible.builtin.lineinfile:
+        path: /etc/prometheus/prometheus.yml
+        insertafter: '# END patroni group'
+        line: "        - {{ item }}:8008"
       with_items:
         - "{{ groups['postgres_cluster'] }}"
     - name: reload prometheus config
