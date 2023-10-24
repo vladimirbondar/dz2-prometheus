@@ -1,0 +1,13 @@
+[Unit]
+Description=Prometheus exporter for Postgresql (https://github.com/prometheus/blackbox_exporter)
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+WorkingDirectory=/opt/blackbox_exporter
+EnvironmentFile=/opt/blackbox_exporter/blackbox.yml
+User=blackbox_exporter
+ExecStart=/usr/local/bin/blackbox_exporter --config.file=/opt/blackbox_exporter/blackbox.yml
+
+[Install]
+WantedBy=default.target
